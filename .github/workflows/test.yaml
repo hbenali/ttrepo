@@ -11,14 +11,6 @@ on:
         description: agent forward port
         required: true
         type: string
-      REPOSITORY:
-          description: repository
-          required: true
-          type: string
-      REF:
-          description: branch
-          required: true
-          type: string
       maven_version:
         description: Maven version
         default: "3.9.9"
