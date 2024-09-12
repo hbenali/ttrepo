@@ -66,6 +66,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.PRIVATE_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
           config: |
             Host ${{ inputs.AGENT_HOST }}
             HostName ${{ inputs.AGENT_HOST }}
