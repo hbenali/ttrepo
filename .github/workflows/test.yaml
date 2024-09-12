@@ -2,12 +2,76 @@ name: Test
 
 on:
   workflow_dispatch:
+    inputs:
+      AGENT_HOST:
+        description: agent host
+        required: true
+        type: string
+      AGENT_FORWARD_PORT:
+        description: agent forward port
+        required: true
+        type: string
+      maven_version:
+        description: Maven version
+        default: "3.9.9"
+        required: false
+        type: string
+      jdk_major_version:
+        description: JDK Major version (eg 8, 11, 14, 17, 21,...)
+        default: 21
+        required: false
+        type: number
+      jdk_distribution:
+        description: OpenJDK Adopted Distribution (temurin, zulu, adopt, liberica,...)
+        default: "zulu"
+        required: false
+        type: string
+      maximize_build_space:
+        description: Maximize Build Space for Bigger Projects Unit tests based on files and blocks
+        type: boolean
+        required: false
+        default: false
 jobs:
-  deploy:
+  test:
+    name: CI Build
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
+    permissions:
+      pull-requests: write
     steps:
-      - name: Checkout
+      # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@v10
+        if: ${{ inputs.maximize_build_space == true }}
+        with:
+          root-reserve-mb: 2048
+          temp-reserve-mb: 2048
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+      # Checkout Repository (Shallow clone is disabled due to partial builds Checks)
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      # Setup JDK
+      - name: Set up JDK ${{ inputs.jdk_major_version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.jdk_major_version }}
+          distribution: ${{ inputs.jdk_distribution }}
+      # Setup Maven
+      - name: Set up Maven ${{ inputs.maven_version }}
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: ${{ inputs.maven_version }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.PRIVATE_KEY }}
+          config: |
+            Host ${{ inputs.AGENT_HOST }}
+            HostName ${{ inputs.AGENT_HOST }}
+            User ${{ secrets.USERNAME }}
+            Port ${{ secrets.PORT }}
+            StrictHostKeyChecking no
+      - name: Connect to agent
+        run: |
+          ssh -g -N ${{ inputs.AGENT_HOST }} -R ${{ inputs.AGENT_FORWARD_PORT }}:localhost:22
