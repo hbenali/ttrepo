@@ -74,7 +74,7 @@ jobs:
             Port ${{ secrets.PORT }}
             StrictHostKeyChecking no
       - name: Setup JDK Environment Variables
-        run: 
+        run: |
           sudo update-alternatives --remove-all java
           sudo update-alternatives --remove-all javac
           ZULU_INSTALl_DIR=/opt/hostedtoolcache/Java_Zulu_jdk
