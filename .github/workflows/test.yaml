@@ -91,8 +91,6 @@ jobs:
           ZULU_INSTALl_DIR=/opt/hostedtoolcache/Java_Zulu_jdk
           JDK_DIR=$(ls "${ZULU_INSTALl_DIR}")
           ZULU_JAVA_HOME="${ZULU_INSTALl_DIR}/${JDK_DIR}/x64"
-          echo "export JAVA_HOME=${ZULU_JAVA_HOME}" > ~/.javarc
-          echo "export JAVA_HOME=${ZULU_JAVA_HOME}" >> ~/.bash_profile
           echo "export JAVA_HOME=${ZULU_JAVA_HOME}" | sudo tee -a /etc/profile
           sudo update-alternatives --install /usr/bin/java java ${ZULU_JAVA_HOME}/bin/java 9999
           sudo update-alternatives --install /usr/bin/javac javac ${ZULU_JAVA_HOME}/bin/javac 9999
