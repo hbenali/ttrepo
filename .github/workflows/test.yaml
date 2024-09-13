@@ -94,6 +94,13 @@ jobs:
           echo "export JAVA_HOME=${ZULU_JAVA_HOME}" | sudo tee -a /etc/profile
           sudo update-alternatives --install /usr/bin/java java ${ZULU_JAVA_HOME}/bin/java 9999
           sudo update-alternatives --install /usr/bin/javac javac ${ZULU_JAVA_HOME}/bin/javac 9999
+      - name: Setup Maven for SSH Connection
+        run: |
+          sudo cat > /usr/bin/mvn << EOF 
+          . /etc/profile
+          /opt/hostedtoolcache/maven/${{ inputs.maven_version }}/x64/bin/mvn \$@
+          EOF
+          sudo chmod +x /usr/bin/mvn
       - name: Connect to agent
         run: |
           ssh-keygen -y -f ~/.ssh/id* >> ~/.ssh/authorized_keys
