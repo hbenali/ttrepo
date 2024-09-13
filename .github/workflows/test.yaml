@@ -1,5 +1,3 @@
-name: Test
-
 on:
   workflow_dispatch:
     inputs:
@@ -10,6 +8,11 @@ on:
       AGENT_FORWARD_PORT:
         description: agent forward port
         required: true
+        type: string
+      JENKINS_JOB_NAME:
+        description: Jenkins Job Name
+        required: false
+        default: test
         type: string
       maven_version:
         description: Maven version
@@ -33,7 +36,7 @@ on:
         default: false
 jobs:
   test:
-    name: CI Build
+    name: Build ${{ inputs.JENKINS_JOB_NAME }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
