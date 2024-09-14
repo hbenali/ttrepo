@@ -68,8 +68,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2-repository
+          key: ${{ inputs.JENKINS_JOB_NAME }}-m2-repository
+          restore-keys: ${{ runner.os }}-${{ inputs.JENKINS_JOB_NAME }}-m2-repository
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
