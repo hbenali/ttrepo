@@ -12,9 +12,12 @@ on:
         type: string
       JENKINS_JOB_NAME:
         description: Jenkins Job Name
-        required: false
-        default: test
+        required: true
         type: string
+      JENKINS_JOB_BUILD_NUMBER:
+        description: Jenkins Job Build Number
+        required: true
+        type: number
       maven_version:
         description: Maven version
         default: "3.9.9"
@@ -37,7 +40,7 @@ on:
         default: false
 jobs:
   test:
-    name: Build ${{ inputs.JENKINS_JOB_NAME }}
+    name: "Build ${{ inputs.JENKINS_JOB_NAME }} #${{ inputs.JENKINS_JOB_BUILD_NUMBER }}"
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
@@ -69,7 +72,7 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ inputs.JENKINS_JOB_NAME }}-m2-repository
-          restore-keys: ${{ inputs.JENKINS_JOB_NAME }}-m2-repository
+          restore-keys: ${{ runner.os }}-${{ inputs.JENKINS_JOB_NAME }}-m2-repository
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -104,6 +107,7 @@ jobs:
           echo "  - AGENT: ${{ inputs.AGENT_HOST }}"
           echo "  - AGENT FORWARD PORT: ${{ inputs.AGENT_FORWARD_PORT }}"
           echo "  - JENKINS JOB NAME: ${{ inputs.JENKINS_JOB_NAME }}"
+          echo "  - JENKINS JOB BUILD NUMBER: ${{ inputs.JENKINS_JOB_BUILD_NUMBER }}"
           echo "  - MAVEN VERSION: ${{ inputs.maven_version }}"
           echo "  - JDK MAJOR VERSION: ${{ inputs.jdk_major_version }}"
           echo "  - JDK DISTRIBUTION: ${{ inputs.jdk_distribution }}"
