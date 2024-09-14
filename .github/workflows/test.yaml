@@ -52,9 +52,6 @@ jobs:
           temp-reserve-mb: 2048
           swap-size-mb: 1024
           remove-dotnet: 'true'
-      # Checkout Repository (Shallow clone is disabled due to partial builds Checks)
-      - name: Checkout repository
-        uses: actions/checkout@v4
       # Setup JDK
       - name: Set up JDK ${{ inputs.jdk_major_version }}
         uses: actions/setup-java@v4
