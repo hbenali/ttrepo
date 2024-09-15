@@ -18,6 +18,11 @@ on:
         description: Jenkins Job Build Number
         required: true
         type: number
+      MAVEN_WAIT_TIMEOUT:
+        description: Maven startup wait timeout
+        required: false
+        default: 300
+        type: number
       maven_version:
         description: Maven version
         default: "3.9.9"
@@ -46,6 +51,8 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
@@ -98,7 +105,7 @@ jobs:
         run: |
           sudo cat > /usr/bin/mvn << EOF 
           . /etc/profile
-          /opt/hostedtoolcache/maven/${{ inputs.maven_version }}/x64/bin/mvn \$@
+          /opt/hostedtoolcache/maven/${{ inputs.maven_version }}/x64/bin/mvn \$@ | tee /tmp/mvnout
           EOF
           sudo chmod +x /usr/bin/mvn
       - name: Print Information
@@ -115,10 +122,10 @@ jobs:
           echo "==="
       - name: Connect to agent
         run: |
-          echo "Forwarding SSH Port to Jenkins agent"
-          ssh-keygen -y -f ~/.ssh/id* >> ~/.ssh/authorized_keys
-          chmod 0600 ~/.ssh/authorized_keys
-          ssh -g -N ${{ inputs.AGENT_HOST }} -R ${{ inputs.AGENT_FORWARD_PORT }}:localhost:22 ||:
+          chmod +x ghaagentdaemon.sh
+          ./ghaagentdaemon.sh
+        env: 
+          MAVEN_WAIT_TIMEOUT: ${{ inputs.MAVEN_WAIT_TIMEOUT }}
       - name: Stop runner
         if: always()
         run: | 
