@@ -105,7 +105,7 @@ jobs:
         run: |
           sudo cat > /usr/bin/mvn << EOF 
           . /etc/profile
-          /opt/hostedtoolcache/maven/${{ inputs.maven_version }}/x64/bin/mvn \$@ 2>&1 | tee /tmp/mvnout
+          /opt/hostedtoolcache/maven/${{ inputs.maven_version }}/x64/bin/mvn \$@
           EOF
           sudo chmod +x /usr/bin/mvn
       - name: Print Information

@@ -12,7 +12,6 @@ echo "Connected"
 echo "Waiting for maven execution..."
 count=0
 try=${MAVEN_WAIT_TIMEOUT:-300}
-mvnoutputfile="/tmp/mvnout"
 while [ $count -lt $try ] && [ -z "$(getMavenPid)" ]; do
     sleep 5
     count=$(( $count + 1 ))
@@ -25,11 +24,6 @@ while [ ! -z "$(getMavenPid)" ]; do
   echo "OK Maven is running"
   sleep 5 
 done
-if [ -f "${mvnoutputfile}" ]; then 
-  echo "##### Build output:"
-  cat ${mvnoutputfile}
-  echo "#####"
-fi
 echo "mvn build is finished! Stopping ssh agent..."
 kill -9 ${SSH_PID}
 exit 0
