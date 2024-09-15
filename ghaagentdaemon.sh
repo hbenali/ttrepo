@@ -22,8 +22,8 @@ if [ $count -ge $try ]; then
   exit 1
 fi
 echo "OK Maven is running"
+tail -F ${mvnoutputfile} &
 wait $(getMavenPid)
 echo "mvn build is finished! Stopping ssh agent..."
-tail -F ${mvnoutputfile} &
 kill -9 ${SSH_PID}
 exit 0
