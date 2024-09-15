@@ -10,7 +10,7 @@ echo "Waiting for maven execution..."
 count=0
 try=${MAVEN_WAIT_TIMEOUT:-300}
 mvnoutputfile="/tmp/mvnout"
-while [ $count -lt $try ] && [ -z $(pgrep mvn) ]; do
+while [ $count -lt $try ] && [ -z $(sudo pgrep mvn) ]; do
     sleep 5
     count=$(( $count + 1 ))
 done
@@ -19,7 +19,7 @@ if [ $count -ge $try ]; then
   exit 1
 fi
 echo "OK Maven is running"
-wait $(pgrep mvn)
+wait $(sudo pgrep mvn)
 echo "mvn build is finished! Stopping ssh agent..."
 kill -9 ${SSH_PID}
 exit 0
