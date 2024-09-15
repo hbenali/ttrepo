@@ -15,6 +15,7 @@ try=${MAVEN_WAIT_TIMEOUT:-300}
 while [ $count -lt $try ] && [ -z "$(getMavenPid)" ]; do
     sleep 5
     count=$(( $count + 1 ))
+    echo "Retry ($count/$try): mvn is not yet started!"
 done
 if [ $count -ge $try ]; then 
   echo "Error! Cound not build maven project! Abort"
