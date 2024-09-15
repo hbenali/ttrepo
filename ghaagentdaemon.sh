@@ -13,7 +13,7 @@ echo "Waiting for maven execution..."
 count=0
 try=${MAVEN_WAIT_TIMEOUT:-300}
 mvnoutputfile="/tmp/mvnout"
-while [ $count -lt $try ] && [ -z $(getMavenPid()) ]; do
+while [ $count -lt $try ] && [ ! -f "${mvnoutputfile}" ]; do
     sleep 5
     count=$(( $count + 1 ))
 done
