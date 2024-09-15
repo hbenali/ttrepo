@@ -10,7 +10,7 @@ echo "Waiting for maven execution..."
 count=0
 try=${MAVEN_WAIT_TIMEOUT:-300}
 mvnoutputfile="/tmp/mvnout"
-while [ $count -lt $try ] && [ ! -f ${mvnoutputfile} ]; do
+while [ $count -lt $try ] && [ -z $(pgrep mvn) ]; do
     sleep 5
     count=$(( $count + 1 ))
 done
@@ -18,4 +18,5 @@ if [ $count -ge $try ]; then
   echo "Error! Cound not build maven project! Abort"
   exit 1
 fi
-tail -F ${mvnoutputfile}
+tail -F ${mvnoutputfile} & 
+wait $(pgrep mvn)
