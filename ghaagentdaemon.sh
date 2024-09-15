@@ -1,5 +1,5 @@
 #!/bin/bash -u
-getMavenPid() {
+function getMavenPid() {
     ps -ef | grep /usr/share/maven | grep -v grep | awk '{print $2}' | sort | tail -1 || echo ""
 }
 echo "Forwarding SSH Port to Jenkins agent"
@@ -13,7 +13,7 @@ echo "Waiting for maven execution..."
 count=0
 try=${MAVEN_WAIT_TIMEOUT:-300}
 mvnoutputfile="/tmp/mvnout"
-while [ $count -lt $try ] && [ ! -f "${mvnoutputfile}" ]; do
+while [ $count -lt $try ] && [ -z "$(getMavenPid())" ]; do
     sleep 5
     count=$(( $count + 1 ))
 done
