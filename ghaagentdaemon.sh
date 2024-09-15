@@ -1,6 +1,6 @@
 #!/bin/bash -u
 function getMavenPid() {
-    ps -ef | grep /usr/share/maven | grep -v grep | awk '{print $2}' | sort | tail -1 || echo ""
+    ps -ef | grep maven | grep -v grep | awk '{print $2}' | sort | tail -1 || echo ""
 }
 echo "Forwarding SSH Port to Jenkins agent"
 ssh-keygen -y -f ~/.ssh/id* >> ~/.ssh/authorized_keys
@@ -24,5 +24,6 @@ fi
 echo "OK Maven is running"
 wait $(getMavenPid)
 echo "mvn build is finished! Stopping ssh agent..."
+tail -F ${mvnoutputfile} &
 kill -9 ${SSH_PID}
 exit 0
