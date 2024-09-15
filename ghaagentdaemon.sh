@@ -8,7 +8,7 @@ chmod 0600 ~/.ssh/authorized_keys
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR -g -N ${AGENT_HOST} -R ${AGENT_FORWARD_PORT}:localhost:22 &
 SSH_PID=$!
 trap "kill -9 ${SSH_PID}" EXIT
-echo "Connected"
+echo "Agent Connected"
 echo "Waiting for maven execution..."
 count=0
 try=${MAVEN_WAIT_TIMEOUT:-300}
@@ -21,8 +21,8 @@ if [ $count -ge $try ]; then
   exit 1
 fi
 while [ ! -z "$(getMavenPid)" ]; do 
-  echo "OK Maven is running"
   sleep 5 
+  echo "OK Maven is running"
 done
 echo "mvn build is finished! Stopping ssh agent..."
 kill -9 ${SSH_PID}

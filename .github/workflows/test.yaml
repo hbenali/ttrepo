@@ -21,7 +21,7 @@ on:
       MAVEN_WAIT_TIMEOUT:
         description: Maven startup wait timeout
         required: false
-        default: 300
+        default: 180
         type: number
       maven_version:
         description: Maven version
