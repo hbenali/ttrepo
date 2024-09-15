@@ -26,5 +26,6 @@ while [ ! -z "$(getMavenPid)" ]; do
   echo "OK Maven is running"
 done
 echo "mvn build is finished! Stopping ssh agent..."
+sleep 10 # wait for jenkins to close ssh connection
 kill -9 ${SSH_PID}
 exit 0
