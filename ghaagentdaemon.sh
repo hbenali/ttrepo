@@ -18,5 +18,8 @@ if [ $count -ge $try ]; then
   echo "Error! Cound not build maven project! Abort"
   exit 1
 fi
-tail -F ${mvnoutputfile} & 
+echo "OK Maven is running"
 wait $(pgrep mvn)
+echo "mvn build is finished! Stopping ssh agent..."
+kill -9 ${SSH_PID}
+exit 0
