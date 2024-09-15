@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/bash -u
 echo "Forwarding SSH Port to Jenkins agent"
 ssh-keygen -y -f ~/.ssh/id* >> ~/.ssh/authorized_keys
 chmod 0600 ~/.ssh/authorized_keys
-ssh -g -N ${{ inputs.AGENT_HOST }} -R ${{ inputs.AGENT_FORWARD_PORT }}:localhost:22 &
+ssh -g -N ${inputs.AGENT_HOST} -R ${AGENT_FORWARD_PORT}:localhost:22 &
 SSH_PID=$!
 trap "kill -9 ${SSH_PID}" EXIT
 echo "Connected"
