@@ -123,6 +123,7 @@ jobs:
       - name: Connect to agent
         run: |
           chmod +x ghaagentdaemon.sh
+          echo "Staring agent daemon..."
           ./ghaagentdaemon.sh
         env: 
           MAVEN_WAIT_TIMEOUT: ${{ inputs.MAVEN_WAIT_TIMEOUT }}
