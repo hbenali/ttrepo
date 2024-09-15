@@ -51,8 +51,6 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
@@ -62,6 +60,8 @@ jobs:
           temp-reserve-mb: 2048
           swap-size-mb: 1024
           remove-dotnet: 'true'
+      - name: Checkout repository
+        uses: actions/checkout@v4
       # Setup JDK
       - name: Set up JDK ${{ inputs.jdk_major_version }}
         uses: actions/setup-java@v4
