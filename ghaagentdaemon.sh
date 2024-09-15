@@ -21,11 +21,15 @@ if [ $count -ge $try ]; then
   echo "Error! Cound not build maven project! Abort"
   exit 1
 fi
-echo "OK Maven is running"
-tail -F ${mvnoutputfile} &
 while [ ! -z "$(getMavenPid)" ]; do 
+  echo "OK Maven is running"
   sleep 5 
 done
+if [ -f "${mvnoutputfile}" ]; then 
+  echo "##### Build output:"
+  cat ${mvnoutputfile}
+  echo "#####"
+fi
 echo "mvn build is finished! Stopping ssh agent..."
 kill -9 ${SSH_PID}
 exit 0
